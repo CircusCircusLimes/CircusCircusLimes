@@ -1,8 +1,106 @@
-<a href="/" id="nolinks"><b>{{ config.SITE_NAME }}</b></a>{% if config.SITE_DESCRIPTION %} - {% endif %} <i>{{ config.SITE_DESCRIPTION }}</i>
-<div class="login">
-	{% if current_user.is_authenticated %}
-	<b {% if current_user.admin %} style="color: red;" {% endif %}>{{ current_user.username }}</b><a class="logoutlink" href="/action_logout">(logout)</a>
-	{% else %}
-	<a href="/loginform">Click here to login or register!</a>
-	{% endif %}
+<div class="dc-header-inner">
+
+	<!-- =====================================
+     BRAND
+     ===================================== -->
+
+<a href="/" class="dc-logo">
+    <img
+        src="{{ url_for('static', filename='images/DishCourseLogo.png') }}"
+        alt="DishCourse - Where recipes start conversations"
+        class="dc-logo-image"
+    >
+</a>
+
+	<!-- =====================================
+	     SEARCH
+	     Placeholder for future functionality
+	     ===================================== -->
+
+	<div class="dc-search">
+
+		<span class="dc-search-icon">
+			⌕
+		</span>
+
+		<input
+			type="text"
+			placeholder="Search discussions, recipes, or users..."
+			aria-label="Search DishCourse"
+		>
+
+	</div>
+
+
+	<!-- =====================================
+	     START DISCUSSION
+	     ===================================== -->
+
+	<div class="dc-header-actions">
+
+		{% if current_user.is_authenticated %}
+
+			<a
+				href="/"
+				class="dc-start-button"
+				title="Choose a discussion area to create a post"
+			>
+				<span class="dc-plus">
+					+
+				</span>
+
+				Start a Discussion
+			</a>
+
+		{% else %}
+
+			<a
+				href="/loginform"
+				class="dc-start-button"
+			>
+				<span class="dc-plus">
+					+
+				</span>
+
+				Start a Discussion
+			</a>
+
+		{% endif %}
+
+
+		<!-- User -->
+
+		<div class="dc-header-user">
+
+			<div class="dc-avatar">
+				{% if current_user.is_authenticated %}
+					{{ current_user.username[0]|upper }}
+				{% else %}
+					?
+				{% endif %}
+			</div>
+
+
+			<div class="dc-header-user-info">
+
+				{% if current_user.is_authenticated %}
+
+					<strong>
+						{{ current_user.username }}
+					</strong>
+
+				{% else %}
+
+					<a href="/loginform">
+						Login
+					</a>
+
+				{% endif %}
+
+			</div>
+
+		</div>
+
+	</div>
+
 </div>
