@@ -34,6 +34,7 @@ class User(UserMixin, db.Model):
 
     posts = db.relationship("Post", backref="user")
     comments = db.relationship("Comment", backref="user")
+    reactions = db.relationship("Reaction", backref="user")
 
     def __init__(self, email, username, password):
         self.email = email
@@ -48,6 +49,7 @@ class Post(db.Model):
     title = db.Column(db.Text)
     content = db.Column(db.Text)
     comments = db.relationship("Comment", backref="post")
+    reactions = db.relationship("Reaction", backref="post")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     subforum_id = db.Column(db.Integer, db.ForeignKey('subforum.id'))
     postdate = db.Column(db.DateTime)
@@ -134,6 +136,20 @@ class Comment(db.Model):
             self.savedresponce =  "Just a moment ago!"
         return self.savedresponce
 
+class Reaction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    reaction_type = db.Column(db.String(10), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+
+    # this prevents one user from having multiple reactions to the same comment/post
+    __table_args__ = (
+        db.UniqueConstraint("user_id", "post_id", name="unique_user_post_reaction"), 
+    )
+
+    def __init__(self, reaction_type):
+        self.reaction_type = reaction_type
+        
 def error(errormessage):
 	return "<b style=\"color: red;\">" + errormessage + "</b>"
 

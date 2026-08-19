@@ -1880,3 +1880,14 @@ body {
 .dc-footer {
 	flex-shrink: 0;
 }
+
+/* =========================================================
+   ACTIVE REACTION
+   ========================================================= */
+
+.reaction-selected {
+	background: var(--dc-peach);
+	border-color: var(--dc-orange);
+	color: var(--dc-plum-dark);
+	box-shadow: 0 0 0 2px rgba(255, 87, 34, 0.12);
+}

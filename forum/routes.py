@@ -1,9 +1,9 @@
-from flask import render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import current_user, login_user, logout_user
 from flask_login.utils import login_required
 import datetime
-from flask import Blueprint, render_template, request, redirect, url_for
-from forum.models import User, Post, Comment, Subforum, valid_content, valid_title, db, generateLinkPath, error
+
+from forum.models import User, Post, Comment, Reaction, Subforum, valid_content, valid_title, db, generateLinkPath, error
 from forum.user import username_taken, email_taken, valid_username
 
 ##
@@ -93,15 +93,55 @@ def addpost():
 
 @rt.route('/viewpost')
 def viewpost():
-	postid = int(request.args.get("post"))
-	post = Post.query.filter(Post.id == postid).first()
-	if not post:
-		return error("That post does not exist!")
-	if not post.subforum.path:
-		subforumpath = generateLinkPath(post.subforum.id)
-	comments = Comment.query.filter(Comment.post_id == postid).order_by(Comment.id.desc()) # no need for scalability now
-	return render_template("viewpost.html", post=post, path=subforumpath, comments=comments)
+    postid = int(request.args.get("post"))
+    post = Post.query.filter(Post.id == postid).first()
 
+    if not post:
+        return error("That post does not exist!")
+
+    if not post.subforum.path:
+        subforumpath = generateLinkPath(post.subforum.id)
+
+    comments = Comment.query.filter(
+        Comment.post_id == postid
+    ).order_by(Comment.id.desc())
+
+    like_count = Reaction.query.filter_by(
+        post_id=postid,
+        reaction_type="like"
+    ).count()
+
+    dislike_count = Reaction.query.filter_by(
+        post_id=postid,
+        reaction_type="dislike"
+    ).count()
+
+    heart_count = Reaction.query.filter_by(
+        post_id=postid,
+        reaction_type="heart"
+    ).count()
+
+    user_reaction = None
+
+    if current_user.is_authenticated:
+        reaction = Reaction.query.filter_by(
+            post_id=postid,
+            user_id=current_user.id
+        ).first()
+
+        if reaction:
+            user_reaction = reaction.reaction_type
+
+    return render_template(
+        "viewpost.html",
+        post=post,
+        path=subforumpath,
+        comments=comments,
+        like_count=like_count,
+        dislike_count=dislike_count,
+        heart_count=heart_count,
+        user_reaction=user_reaction
+    )
 @login_required
 @rt.route('/action_comment', methods=['POST', 'GET'])
 def comment():
