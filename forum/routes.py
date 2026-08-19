@@ -144,4 +144,3 @@ def action_post():
 	user.posts.append(post)
 	db.session.commit()
 	return redirect("/viewpost?post=" + str(post.id))
-
