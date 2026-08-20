@@ -29,11 +29,39 @@
 
 		<div class="post-reaction-placeholder">
 			<span class="reaction-placeholder-label">Reactions</span>
+
+			{% if current_user.is_authenticated %}
 			<div class="reaction-placeholder-actions">
-				<button type="button" class="reaction-button">👍 <span>Like</span></button>
-				<button type="button" class="reaction-button">👎 <span>Dislike</span></button>
-				<button type="button" class="reaction-button">❤️ <span>Heart</span></button>
+				<form action="/action_reaction" method="POST">
+					<input type="hidden" name="post_id" value="{{ post.id }}">
+					<input type="hidden" name="reaction_type" value="like">
+					<button type="submit"
+						class="reaction-button {% if user_reaction == 'like' %}reaction-selected{% endif %}">
+						👍 <span>Like {{ like_count }}</span>
+					</button>
+				</form>
+
+				<form action="/action_reaction" method="POST">
+					<input type="hidden" name="post_id" value="{{ post.id }}">
+					<input type="hidden" name="reaction_type" value="dislike">
+					<button type="submit"
+						class="reaction-button {% if user_reaction == 'dislike' %}reaction-selected{% endif %}">
+						👎 <span>Dislike {{ dislike_count }}</span>
+					</button>
+				</form>
+
+				<form action="/action_reaction" method="POST">
+					<input type="hidden" name="post_id" value="{{ post.id }}">
+					<input type="hidden" name="reaction_type" value="heart">
+					<button type="submit"
+						class="reaction-button {% if user_reaction == 'heart' %}reaction-selected{% endif %}">
+						❤️ <span>Heart {{ heart_count }}</span>
+					</button>
+				</form>
 			</div>
+			{% else %}
+				<a href="/loginform">Login to react to this post</a>
+			{% endif %}
 		</div>
 	</article>
 

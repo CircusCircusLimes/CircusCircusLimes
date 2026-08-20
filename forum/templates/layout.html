@@ -1,42 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link
-		rel="stylesheet"
-		type="text/css"
-		href="{{ url_for('static', filename='bootstrap.min.css') }}"
-	>
-
-	<link
-		rel="stylesheet"
-		type="text/css"
-		href="{{ url_for('static', filename='style.css') }}"
-	>
-
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 	<title>DishCourse</title>
 </head>
 
 <body>
-
 	<div class="dc-app-shell">
 
-		<!-- =====================================
-		     GLOBAL HEADER
-		     ===================================== -->
-
+		<!-- Global Header -->
 		<header class="dc-top-header">
 			{% include 'header.html' %}
 		</header>
 
-
-		<!-- =====================================
-		     APPLICATION BODY
-		     ===================================== -->
-
+		<!-- Application Body -->
 		<div class="dc-body-layout">
 
 			<!-- Left Navigation -->
@@ -44,60 +24,51 @@
 				{% include 'sidebar.html' %}
 			</aside>
 
-
 			<!-- Main Content -->
 			<main class="dc-main-content">
 
 				{% if errors %}
+				<div class="dc-errors">
+					{% for error in errors %}
+						<div class="alert alert-danger">{{ error }}</div>
+					{% endfor %}
+				</div>
+			{% endif %}
 
-					<div class="dc-errors">
-
-						{% for error in errors %}
-
-							<div class="alert alert-danger">
-								{{ error }}
+				{% with messages = get_flashed_messages(with_categories=true) %}
+					{% if messages %}
+						<div class="dc-modal-overlay" id="dcMessageModal">
+							<div class="dc-message-modal">
+								<div class="dc-message-icon">⚠️</div>
+								<h2>Hold That Thought</h2>
+								{% for category, message in messages %}
+									<p>{{ message }}</p>
+								{% endfor %}
+								<button type="button" class="dc-modal-button" onclick="closeMessageModal()">OK</button>
 							</div>
+						</div>
+					{% endif %}
+				{% endwith %}
 
-						{% endfor %}
-
-					</div>
-
-				{% endif %}
-
-
-				{% block body %}
-				{% endblock %}
-
+				{% block body %}{% endblock %}
 			</main>
-
 
 			<!-- Right Sidebar -->
 			<aside class="dc-right-sidebar">
 				{% include 'right_sidebar.html' %}
 			</aside>
-
 		</div>
 
-
-		<!-- =====================================
-		     FOOTER
-		     ===================================== -->
-
+		<!-- Footer -->
 		<footer class="dc-footer">
-
 			<div class="dc-footer-inner">
-
-				<div>
-					&copy; 2026 DishCourse
-				</div>
+				<div>&copy; 2026 DishCourse</div>
 
 				<div class="dc-footer-links">
-
 					<a href="#">About</a>
 					<a href="#">Guidelines</a>
 					<a href="#">Privacy Policy</a>
 					<a href="#">Contact</a>
-
 				</div>
 
 				<div class="dc-social-links">
@@ -106,13 +77,14 @@
 					<span>p</span>
 					<span>𝕏</span>
 				</div>
-
 			</div>
-
 		</footer>
 
 	</div>
-
+	<script>
+	function closeMessageModal() {
+		document.getElementById("dcMessageModal").style.display = "none";
+	}
+	</script>
 </body>
-
 </html>

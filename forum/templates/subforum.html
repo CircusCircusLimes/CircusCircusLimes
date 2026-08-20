@@ -99,13 +99,12 @@
 				<div class="feed-post-stats">
 					<div>
 						<span class="feed-stat-icon">♡</span>
-						<strong>—</strong>
-						<small>likes</small>
+						<strong>{{ post.reactions|length }}</strong>
+						<small>reactions</small>
 					</div>
-
 					<div>
 						<span class="feed-stat-icon">◯</span>
-						<strong>—</strong>
+						<strong>{{ post.comments|length }}</strong>
 						<small>comments</small>
 					</div>
 				</div>
