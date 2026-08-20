@@ -444,21 +444,21 @@ button {
 .dishcourse-hero {
 	background: linear-gradient(135deg, #3a0b44, #5b174e);
 	border-radius: var(--dc-radius-lg);
-	padding: 3.2rem 2rem;
-	margin-bottom: 2.5rem;
+	padding: 3rem 2rem;
+	margin-bottom: 2rem;
 	color: #fff;
 	box-shadow: var(--dc-shadow);
 }
 
 .hero-content {
-	max-width: 720px;
+	max-width: 760px;
 	margin: 0 auto;
 	text-align: center;
 }
 
 .hero-eyebrow {
 	color: var(--dc-orange);
-	font-size: 0.7rem;
+	font-size: 0.72rem;
 	text-transform: uppercase;
 	letter-spacing: 0.15em;
 	font-weight: 900;
@@ -466,15 +466,15 @@ button {
 
 .hero-title {
 	font-family: "Arial Rounded MT Bold", "Avenir Next", Avenir, sans-serif;
-	font-size: 2.25rem;
+	font-size: 2.4rem;
 	font-weight: 900;
 	line-height: 1.1;
 	letter-spacing: -0.035em;
 }
 
 .hero-text {
-	color: rgba(255, 255, 255, 0.85);
-	font-size: 0.95rem;
+	color: rgba(255, 255, 255, 0.88);
+	font-size: 1.02rem;
 	line-height: 1.7;
 }
 
@@ -483,13 +483,13 @@ button {
 	justify-content: space-between;
 	align-items: end;
 	gap: 2rem;
-	margin-bottom: 1.4rem;
+	margin-bottom: 1.2rem;
 }
 
 .forum-section-heading h2 {
 	margin: 0;
 	font-family: "Arial Rounded MT Bold", "Avenir Next", Avenir, sans-serif;
-	font-size: 1.6rem;
+	font-size: 1.75rem;
 	font-weight: 900;
 	letter-spacing: -0.025em;
 	color: var(--dc-plum-dark);
@@ -497,7 +497,7 @@ button {
 
 .forum-section-intro {
 	color: var(--dc-muted);
-	font-size: 0.92rem;
+	font-size: 0.98rem;
 }
 
 .forum-card-link {
@@ -506,11 +506,12 @@ button {
 }
 
 .forum-card {
+	min-height: 185px;
 	height: 100%;
 	background: var(--dc-paper);
 	border: 1px solid var(--dc-border);
 	border-radius: var(--dc-radius-md);
-	padding: 1.3rem;
+	padding: 1.45rem;
 	box-shadow: 0 5px 14px rgba(67, 20, 70, 0.04);
 	transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
@@ -521,8 +522,8 @@ button {
 }
 
 .forum-card-icon {
-	width: 48px;
-	height: 48px;
+	width: 50px;
+	height: 50px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -533,19 +534,19 @@ button {
 
 .forum-card-title {
 	color: var(--dc-plum-dark);
-	font-size: 0.98rem;
+	font-size: 1.05rem;
 	font-weight: 900;
 }
 
 .forum-card-description {
 	color: var(--dc-muted);
-	font-size: 0.92rem;
+	font-size: 0.98rem;
 	line-height: 1.55;
 }
 
 .forum-card-action {
 	color: var(--dc-orange);
-	font-size: 0.92rem;
+	font-size: 0.98rem;
 	font-weight: 800;
 }
 
