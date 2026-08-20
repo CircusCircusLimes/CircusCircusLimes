@@ -88,21 +88,22 @@
 	</a>
 
 
-	<!-- Future functionality -->
+	{% if current_user.is_authenticated %}
 	<a
-		href="#"
+		href="/settings"
 		class="dc-sidebar-item"
 	>
 
 		<span class="dc-sidebar-icon">
-			♙
+			⚙
 		</span>
 
 		<span>
-			Profile
+			Settings
 		</span>
 
 	</a>
+	{% endif %}
 
 
 	{% if current_user.is_authenticated %}

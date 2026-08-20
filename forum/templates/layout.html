@@ -37,10 +37,16 @@
 
 				{% with messages = get_flashed_messages(with_categories=true) %}
 					{% if messages %}
+						{% set ns = namespace(all_success=true) %}
+						{% for category, message in messages %}
+							{% if category != 'success' %}
+								{% set ns.all_success = false %}
+							{% endif %}
+						{% endfor %}
 						<div class="dc-modal-overlay" id="dcMessageModal">
 							<div class="dc-message-modal">
-								<div class="dc-message-icon">⚠️</div>
-								<h2>Hold That Thought</h2>
+								<div class="dc-message-icon">{% if ns.all_success %}✅{% else %}⚠️{% endif %}</div>
+								<h2>{% if ns.all_success %}All Set{% else %}Hold That Thought{% endif %}</h2>
 								{% for category, message in messages %}
 									<p>{{ message }}</p>
 								{% endfor %}

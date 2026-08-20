@@ -85,9 +85,11 @@
 
 				{% if current_user.is_authenticated %}
 
-					<strong>
-						{{ current_user.username }}
-					</strong>
+					<a href="/settings">
+						<strong>
+							{{ current_user.username }}
+						</strong>
+					</a>
 
 				{% else %}
 

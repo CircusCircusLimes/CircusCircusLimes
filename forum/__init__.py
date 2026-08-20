@@ -4,6 +4,7 @@ from forum.comments import comments
 from forum.reactions import reactions
 from forum.posts import posts
 from forum.messages import messages
+from forum.settings import settings
 
 def create_app():
     """Construct the core application."""
@@ -17,6 +18,7 @@ def create_app():
     app.register_blueprint(comments)
     app.register_blueprint(reactions)
     app.register_blueprint(messages)
+    app.register_blueprint(settings)
     app.register_blueprint(rt)
     # Set globals
     from forum.models import db
