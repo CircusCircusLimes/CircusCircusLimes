@@ -174,3 +174,7 @@ def valid_title(title):
 def valid_content(content):
 	return len(content) > 10 and len(content) < 5000
 
+# Comment checks
+def valid_comment(content):
+    return len(content.strip()) > 0 and len(content) <= 1000
+
