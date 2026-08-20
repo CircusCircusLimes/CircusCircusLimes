@@ -9,3 +9,4 @@ SQLAlchemy
 Werkzeug
 wheel
 honcho
+PyMySQL==1.2.0
