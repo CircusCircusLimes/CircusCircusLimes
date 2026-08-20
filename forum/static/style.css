@@ -1560,3 +1560,72 @@ button {
 		display: block;
 	}
 }
+
+/* =========================================================
+   PUBLIC POST TOGGLE
+   ========================================================= */
+
+.create-post-public {
+	margin: 1.2rem 0 1.5rem;
+}
+
+.public-toggle {
+	display: flex;
+	align-items: center;
+	gap: 0.9rem;
+	cursor: pointer;
+}
+
+.public-toggle input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.public-toggle-slider {
+	position: relative;
+	width: 48px;
+	height: 26px;
+	flex-shrink: 0;
+	background: var(--dc-border);
+	border-radius: 999px;
+	transition: background 0.2s ease;
+}
+
+.public-toggle-slider::after {
+	content: "";
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 20px;
+	height: 20px;
+	background: #fff;
+	border-radius: 50%;
+	box-shadow: 0 2px 6px rgba(38, 6, 47, 0.18);
+	transition: transform 0.2s ease;
+}
+
+.public-toggle input:checked + .public-toggle-slider {
+	background: var(--dc-orange);
+}
+
+.public-toggle input:checked + .public-toggle-slider::after {
+	transform: translateX(22px);
+}
+
+.public-toggle-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.public-toggle-text strong {
+	color: var(--dc-plum-dark);
+	font-size: 1rem;
+	font-weight: 800;
+}
+
+.public-toggle-text small {
+	color: var(--dc-muted);
+	font-size: 0.85rem;
+	margin-top: 0.15rem;
+}
