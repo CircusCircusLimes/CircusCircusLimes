@@ -1,6 +1,7 @@
 from flask import Flask
 from forum.routes import rt
 from forum.comments import comments
+from forum.posts import posts
 
 def create_app():
     """Construct the core application."""
@@ -10,6 +11,7 @@ def create_app():
     # post_routes
     # subforum_routes
     # etc
+    app.register_blueprint(posts)
     app.register_blueprint(comments)
     app.register_blueprint(rt)
     # Set globals

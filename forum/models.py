@@ -51,14 +51,16 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     subforum_id = db.Column(db.Integer, db.ForeignKey('subforum.id'))
     postdate = db.Column(db.DateTime)
+    is_public = db.Column(db.Boolean,default=True) #added MCC
 
     #cache stuff
     lastcheck = None
     savedresponce = None
-    def __init__(self, title, content, postdate):
+    def __init__(self, title, content, postdate, is_public):
         self.title = title
         self.content = content
         self.postdate = postdate
+        self.is_public = is_public #added MCC
     def get_time_string(self):
         #this only needs to be calculated every so often, not for every request
         #this can be a rudamentary chache

@@ -8,6 +8,7 @@
 		<p>You're posting in <strong>{{ subforum.title }}</strong></p>
 	</section>
 
+
 	<section class="create-post-card">
 		<form action="action_post?sub={{ subforum.id }}" method="POST" class="create-post-form">
 
@@ -15,6 +16,11 @@
 				<label for="post-title">Discussion Title</label>
 				<input id="post-title" type="text" name="title" class="form-control"
 					placeholder="Give your discussion a title...">
+			</div>
+
+			<div class="create-post-field"><!-- added checkbox in its on create post field, mcc -->
+				<input type="checkbox" name="is_public" id="is_public" checked>
+				<label for="is_public">Make this post public</label>
 			</div>
 
 			<div class="create-post-field">
