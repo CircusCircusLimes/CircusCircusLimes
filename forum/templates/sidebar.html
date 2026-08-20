@@ -32,6 +32,28 @@
 	</a>
 
 
+	{% if current_user.is_authenticated %}
+	<a
+		href="/messages"
+		class="dc-sidebar-item"
+	>
+
+		<span class="dc-sidebar-icon">
+			✉
+		</span>
+
+		<span>
+			Messages
+		</span>
+
+		{% if unread_message_count and unread_message_count > 0 %}
+		<span class="dc-sidebar-badge">{{ unread_message_count }}</span>
+		{% endif %}
+
+	</a>
+	{% endif %}
+
+
 	<!-- Future functionality -->
 	<a
 		href="#"
