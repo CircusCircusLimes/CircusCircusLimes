@@ -1,18 +1,59 @@
 {% extends 'layout.html' %}
-{% block body%}
-<div class="toplevelinfo">
-	Top level subforums:
-</div>
-{% for subforum in subforums %}
-<div class="subforumlisting">
-<div class="subforumtitle">
-<a href="/subforum?sub={{ subforum.id }}">
-{{ subforum.title}}
-</a>
-</div>
-<div class="subforumdesc">
-{{ subforum.description }}
-</div>
-</div>
-{% endfor %}
+
+{% block body %}
+
+<section class="dishcourse-hero text-center">
+	<div class="hero-content">
+		<p class="hero-eyebrow">Welcome to DishCourse</p>
+		<h1 class="hero-title">
+			Where food meets conversation.
+			 <!-- TEST DISHCOURSE PAGE -->
+		</h1>
+		<p class="hero-text">
+			Share recipes, trade ideas, critique dishes, and join the conversation
+			with people who love talking about food as much as you do.
+		</p>
+	</div>
+</section>
+
+<section class="forum-section">
+	<div class="forum-section-heading">
+		<div>
+			<p class="section-eyebrow">Community</p>
+			<h2>Browse Discussions</h2>
+		</div>
+
+		<p class="forum-section-intro">
+			Choose a conversation and see what's cooking.
+		</p>
+	</div>
+
+	<div class="row g-4">
+		{% for subforum in subforums %}
+		<div class="col-12 col-md-6 col-lg-4">
+			<a
+				href="/subforum?sub={{ subforum.id }}"
+				class="forum-card-link"
+			>
+				<div class="forum-card h-100">
+					<div class="forum-card-icon"><span>🍽️</span></div>
+					<div class="forum-card-body">
+						<h3 class="forum-card-title">
+							{{ subforum.title }}
+						</h3>
+						<p class="forum-card-description">
+							{{ subforum.description }}
+						</p>
+						<div class="forum-card-action">
+							Enter Discussion
+							<span aria-hidden="true">→</span>
+						</div>
+					</div>
+				</div>
+			</a>
+		</div>
+		{% endfor %}
+	</div>
+</section>
+
 {% endblock %}

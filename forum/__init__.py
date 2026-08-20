@@ -1,5 +1,6 @@
 from flask import Flask
 from forum.routes import rt
+from forum.comments import comments
 from forum.posts import posts
 
 def create_app():
@@ -11,6 +12,7 @@ def create_app():
     # subforum_routes
     # etc
     app.register_blueprint(posts)
+    app.register_blueprint(comments)
     app.register_blueprint(rt)
     # Set globals
     from forum.models import db

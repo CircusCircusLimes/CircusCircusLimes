@@ -9,13 +9,29 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 #OBJECT MODELS
+# class User(UserMixin, db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     username = db.Column(db.Text, unique=True)
+#     password_hash = db.Column(db.Text)
+#     email = db.Column(db.Text, unique=True)
+#     admin = db.Column(db.Boolean, default=False)
+#     posts = db.relationship("Post", backref="user")
+#     comments = db.relationship("Comment", backref="user")
+
+#     def __init__(self, email, username, password):
+#         self.email = email
+#         self.username = username
+#         self.password_hash = generate_password_hash(password)
+#     def check_password(self, password):
+#         return check_password_hash(self.password_hash, password)
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.Text, unique=True)
-    password_hash = db.Column(db.Text)
-    email = db.Column(db.Text, unique=True)
+    username = db.Column(db.String(40), unique=True)
+    password_hash = db.Column(db.String(255))
+    email = db.Column(db.String(255), unique=True)
     admin = db.Column(db.Boolean, default=False)
+
     posts = db.relationship("Post", backref="user")
     comments = db.relationship("Comment", backref="user")
 
@@ -23,6 +39,7 @@ class User(UserMixin, db.Model):
         self.email = email
         self.username = username
         self.password_hash = generate_password_hash(password)
+
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
     
@@ -72,7 +89,8 @@ class Post(db.Model):
 
 class Subforum(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.Text, unique=True)
+    # title = db.Column(db.Text, unique=True)
+    title = db.Column(db.String(140), unique=True)   #string is standard in MYSQL
     description = db.Column(db.Text)
     subforums = db.relationship("Subforum")
     parent_id = db.Column(db.Integer, db.ForeignKey('subforum.id'))
