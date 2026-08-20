@@ -1,0 +1,132 @@
+<nav class="dc-sidebar-nav">
+
+	<a
+		href="/"
+		class="dc-sidebar-item active"
+	>
+
+		<span class="dc-sidebar-icon">
+			⌂
+		</span>
+
+		<span>
+			Home
+		</span>
+
+	</a>
+
+
+	<a
+		href="/"
+		class="dc-sidebar-item"
+	>
+
+		<span class="dc-sidebar-icon">
+			◯
+		</span>
+
+		<span>
+			Discussions
+		</span>
+
+	</a>
+
+
+	<!-- Future functionality -->
+	<a
+		href="#"
+		class="dc-sidebar-item"
+	>
+
+		<span class="dc-sidebar-icon">
+			▣
+		</span>
+
+		<span>
+			Recipes
+		</span>
+
+	</a>
+
+
+	<!-- Future functionality -->
+	<a
+		href="#"
+		class="dc-sidebar-item"
+	>
+
+		<span class="dc-sidebar-icon">
+			▱
+		</span>
+
+		<span>
+			My Posts
+		</span>
+
+	</a>
+
+
+	<!-- Future functionality -->
+	<a
+		href="#"
+		class="dc-sidebar-item"
+	>
+
+		<span class="dc-sidebar-icon">
+			♙
+		</span>
+
+		<span>
+			Profile
+		</span>
+
+	</a>
+
+
+	{% if current_user.is_authenticated %}
+
+		<div class="dc-sidebar-divider"></div>
+
+
+		<a
+			href="/action_logout"
+			class="dc-sidebar-item"
+		>
+
+			<span class="dc-sidebar-icon">
+				⇥
+			</span>
+
+			<span>
+				Logout
+			</span>
+
+		</a>
+
+	{% endif %}
+
+</nav>
+
+
+<!-- Sidebar Brand Illustration -->
+
+<div class="dc-sidebar-community">
+
+	<div class="dc-food-art">
+		<span>♡</span>
+		<span>🥄</span>
+		<span>♨</span>
+	</div>
+
+
+	<p>
+		A community of food lovers sharing, critiquing,
+		and celebrating great food.
+	</p>
+
+
+	<strong>
+		Food worth talking about.
+	</strong>
+
+</div>

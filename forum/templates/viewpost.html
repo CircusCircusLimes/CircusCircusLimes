@@ -1,77 +1,134 @@
 {% extends 'layout.html' %}
+
 {% block body %}
-{{ path|safe}}
+<div class="post-detail-page">
+	<div class="discussion-path">{{ path|safe }}</div>
 
-<div class="actualpost">
-	<div class="actualposttitle">
-		<a href="/viewpost?post={{ post.id }}">{{post.title}}</a>
-		<div class="postposter" {% if post.user.admin %} style="color: red;" {% endif %}>
-			{{ post.user.username }}
-
+	<article class="post-detail-card">
+		<div class="post-detail-header">
+			<div class="post-detail-author-row">
+				<div class="post-detail-avatar">{{ post.user.username[0]|upper }}</div>
+				<div>
+					<p class="section-eyebrow">Discussion Post</p>
+					<h1 class="post-detail-title">{{ post.title }}</h1>
+					<div class="post-detail-meta">
+						<span>Posted by <strong {% if post.user.admin %}class="text-danger"{% endif %}>{{ post.user.username }}</strong></span>
+						<span class="discussion-meta-divider">•</span>
+						<span>{{ post.get_time_string() }}</span>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="posttime">
-			{{ post.get_time_string() }}
-		</div>
-	</div>
-	<div class="postcontent">
-		{{post.content}}
-	</div>
 
+		<div class="post-detail-content">{{ post.content }}</div>
+
+		<div class="post-detail-tags">
+			<span class="feed-tag">Discussion</span>
+			<span class="feed-tag feed-tag-orange">Food Talk</span>
+		</div>
+
+		<div class="post-reaction-placeholder">
+			<span class="reaction-placeholder-label">Reactions</span>
+
+			{% if current_user.is_authenticated %}
+			<div class="reaction-placeholder-actions">
+				<form action="/action_reaction" method="POST">
+					<input type="hidden" name="post_id" value="{{ post.id }}">
+					<input type="hidden" name="reaction_type" value="like">
+					<button type="submit"
+						class="reaction-button {% if user_reaction == 'like' %}reaction-selected{% endif %}">
+						👍 <span>Like {{ like_count }}</span>
+					</button>
+				</form>
+
+				<form action="/action_reaction" method="POST">
+					<input type="hidden" name="post_id" value="{{ post.id }}">
+					<input type="hidden" name="reaction_type" value="dislike">
+					<button type="submit"
+						class="reaction-button {% if user_reaction == 'dislike' %}reaction-selected{% endif %}">
+						👎 <span>Dislike {{ dislike_count }}</span>
+					</button>
+				</form>
+
+				<form action="/action_reaction" method="POST">
+					<input type="hidden" name="post_id" value="{{ post.id }}">
+					<input type="hidden" name="reaction_type" value="heart">
+					<button type="submit"
+						class="reaction-button {% if user_reaction == 'heart' %}reaction-selected{% endif %}">
+						❤️ <span>Heart {{ heart_count }}</span>
+					</button>
+				</form>
+			</div>
+			{% else %}
+				<a href="/loginform">Login to react to this post</a>
+			{% endif %}
+		</div>
+	</article>
+
+	<section class="post-comments-section">
+		<div class="comments-section-heading">
+			<div>
+				<p class="section-eyebrow">Community</p>
+				<h2>Comments</h2>
+			</div>
+
+			<div>
+				{% if current_user.is_authenticated %}
+					<input type="button" id="displayaddcomment" onclick="toggle()" value="Add a Comment" class="btn dishcourse-primary-btn">
+				{% else %}
+					<a href="/loginform" class="btn dishcourse-primary-btn">Login to Comment</a>
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="addcomment" id="addcomment">
+			<form action="/action_comment?post={{ post.id }}" method="POST" class="comment-form">
+				<label for="comment-content" class="form-label">Add to the conversation</label>
+				<textarea id="comment-content" class="form-control comment-textarea" rows="5" name="content" placeholder="Share your thoughts..."></textarea>
+				<div class="comment-form-actions">
+					<input class="btn dishcourse-submit-btn" type="submit" value="Post Comment">
+				</div>
+			</form>
+		</div>
+
+		{% if comments %}
+		<div class="comments-list">
+			{% for comment in comments %}
+			<article class="comment-card">
+				<div class="comment-avatar">{{ comment.user.username[0]|upper }}</div>
+				<div class="comment-card-body">
+					<div class="comment-card-header">
+						<div class="comment-author">
+							<span {% if comment.user.admin %}class="text-danger"{% endif %}>{{ comment.user.username }}</span>
+						</div>
+						<div class="comment-date">{{ comment.get_time_string() }}</div>
+					</div>
+					<div class="comment-card-content">{{ comment.content }}</div>
+				</div>
+			</article>
+			{% endfor %}
+		</div>
+		{% else %}
+		<div class="empty-comments-state">
+			<h3>No comments yet.</h3>
+			<p>Be the first to join the conversation.</p>
+		</div>
+		{% endif %}
+	</section>
 </div>
-<div class="addcomment" id="addcomment">
-	<form action="/action_comment?post={{ post.id }}" method="POST">
-		<textarea class="inputbox varwidth" rows="6" name="content"></textarea><br>
-		<input class="inputbox" style="margin-bottom: 1%;" type="submit" value="Comment">
-	</form>
-</div>
-<div style="text-align: center;">
 
-	
-
-	{% if current_user.is_authenticated %}
-	<input type="button" id="displayaddcomment" onclick="toggle()" value="Add a comment">
-
-	{% else %}
-	<a href="/loginform">Login or register to make a comment</a>
-	{% endif %}
-</div>
-{%if comments%}
-<div class="comments">
-{% for comment in comments %}
-	
-	<div class="comment">
-		<div class="commentuser">
-			(<span  {% if comment.user.admin %} style="color: red;" {% endif %}>{{ comment.user.username }}</span>) - 
-		</div>
-		<div class="commentcontent">
-			{{ comment.content }}
-		</div>
-		
-		<div class="commenttime">
-			{{ comment.get_time_string() }}
-		</div>
-	</div>
-	<br>
-	
-{% endfor %}
-</div>
-{% endif %}
-<script type="text/javascript">
-function toggle(){
+<script>
+function toggle() {
 	var div = document.getElementById("addcomment");
-	var button = document.getElementById("displayaddcomment")
-	if(div.style.display == "none" || div.style.display.trim() == ""){
-		div.style.display = "inline";
-		button.value="Hide";
-	}else{
+	var button = document.getElementById("displayaddcomment");
+
+	if (div.style.display == "none" || div.style.display.trim() == "") {
+		div.style.display = "block";
+		button.value = "Hide Comment Form";
+	} else {
 		div.style.display = "none";
-		button.value="Add a comment"
+		button.value = "Add a Comment";
 	}
-	
 }
 </script>
-
-
 {% endblock %}
-
-
