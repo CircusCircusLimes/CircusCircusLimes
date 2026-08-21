@@ -37,6 +37,7 @@ def add_subforum(title, description, parent=None):
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'routes.loginform'
 
 @login_manager.user_loader
 def load_user(userid):
