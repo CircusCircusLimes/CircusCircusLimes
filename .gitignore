@@ -139,3 +139,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Old stylesheet backup
+forum/static/old_style.css

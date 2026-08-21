@@ -1,30 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename="bootstrap.min.css")}}">
-	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename="style.css")}}">
-	<title>{{ config.SITE_NAME }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          type="text/css"
+          href="{{ url_for('static', filename='bootstrap.min.css') }}">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <title>DishCourse</title>
 </head>
+
 <body>
-<div class="page">
-	<div class="header">
-		{% include 'header.html' %}
-	</div>
-	{% if errors %}
-	<div class="errors">
-	{% for error in errors %}
-		<p class="error">
-			{{ error }}
-		</p>
+	<div class="dc-app-shell">
 
-	{% endfor %}
+		<!-- Global Header -->
+		<header class="dc-top-header">
+			{% include 'header.html' %}
+		</header>
+
+		<!-- Application Body -->
+		<div class="dc-body-layout">
+
+			<!-- Left Navigation -->
+			<aside class="dc-left-sidebar">
+				{% include 'sidebar.html' %}
+			</aside>
+
+			<!-- Main Content -->
+			<main class="dc-main-content">
+
+				{% if errors %}
+				<div class="dc-errors">
+					{% for error in errors %}
+						<div class="alert alert-danger">{{ error }}</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+
+				{% with messages = get_flashed_messages(with_categories=true) %}
+					{% if messages %}
+						<div class="dc-modal-overlay" id="dcMessageModal">
+							<div class="dc-message-modal">
+								<div class="dc-message-icon">⚠️</div>
+								<h2>Hold That Thought</h2>
+								{% for category, message in messages %}
+									<p>{{ message }}</p>
+								{% endfor %}
+								<button type="button" class="dc-modal-button" onclick="closeMessageModal()">OK</button>
+							</div>
+						</div>
+					{% endif %}
+				{% endwith %}
+
+				{% block body %}{% endblock %}
+			</main>
+
+			<!-- Right Sidebar -->
+			<aside class="dc-right-sidebar">
+				{% include 'right_sidebar.html' %}
+			</aside>
+		</div>
+
+		<!-- Footer -->
+		<footer class="dc-footer">
+			<div class="dc-footer-inner">
+				<div>&copy; 2026 DishCourse</div>
+
+				<div class="dc-footer-links">
+					<a href="/about">About</a>
+					<a href="/house-rules">House Rules</a>
+					<a href="/contact">Contact</a>
+				</div>
+
+				<div class="dc-social-links">
+					<a href="#" aria-label="Instagram">
+						<i class="bi bi-instagram"></i>
+					</a>
+
+					<a href="#" aria-label="Facebook">
+						<i class="bi bi-facebook"></i>
+					</a>
+
+					<a href="#" aria-label="Pinterest">
+						<i class="bi bi-pinterest"></i>
+					</a>
+
+					<a href="#" aria-label="X">
+						<i class="bi bi-twitter-x"></i>
+					</a>
+				</div>
+			</div>
+		</footer>
+
 	</div>
-{% endif %}
-	<div class="content">
-		{% block body %}{% endblock %}
-	</div>
-</div>
+	<script>
+	function closeMessageModal() {
+		document.getElementById("dcMessageModal").style.display = "none";
+	}
+	</script>
 </body>
-
-
 </html>
