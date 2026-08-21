@@ -15,6 +15,10 @@
 						<span>Posted by <strong {% if post.user.admin %}class="text-danger"{% endif %}>{{ post.user.username }}</strong></span>
 						<span class="discussion-meta-divider">•</span>
 						<span>{{ post.get_time_string() }}</span>
+						{% if current_user.is_authenticated and current_user.id != post.user_id %}
+						<span class="discussion-meta-divider">•</span>
+						<a href="/messages/{{ post.user.username }}" class="message-user-link">✉ Message</a>
+						{% endif %}
 					</div>
 				</div>
 			</div>
@@ -100,6 +104,9 @@
 					<div class="comment-card-header">
 						<div class="comment-author">
 							<span {% if comment.user.admin %}class="text-danger"{% endif %}>{{ comment.user.username }}</span>
+							{% if current_user.is_authenticated and current_user.id != comment.user_id %}
+							<a href="/messages/{{ comment.user.username }}" class="message-user-link">✉ Message</a>
+							{% endif %}
 						</div>
 						<div class="comment-date">{{ comment.get_time_string() }}</div>
 					</div>
