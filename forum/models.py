@@ -31,6 +31,10 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
     admin = db.Column(db.Boolean, default=False)
+    # Filename only (not a path) of the user's uploaded avatar image, stored
+    # under forum/static/images/avatars/. NULL means "no photo uploaded" --
+    # the UI falls back to the colored-initial avatar in that case.
+    avatar_filename = db.Column(db.String(255), nullable=True)
 
     posts = db.relationship("Post", backref="user")
     comments = db.relationship("Comment", backref="user")
