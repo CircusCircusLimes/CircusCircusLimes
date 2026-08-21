@@ -1258,23 +1258,22 @@ button {
 }
 
 .dc-social-links {
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	gap: 0.9rem;
-	font-size: 1rem;
-	font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    /* font-size: 1rem;
+    font-weight: 900; */
 }
 
-.dc-social-links span {
-	width: 34px;
-	height: 34px;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	line-height: 1;
+.dc-social-links i {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
-
 /* =========================================================
    MESSAGE MODAL
    ========================================================= */
@@ -1635,6 +1634,101 @@ button {
 	color: var(--dc-muted);
 	font-size: 0.85rem;
 	margin-top: 0.15rem;
+}
+
+/* =========================================================
+   ABOUT PAGE
+   ========================================================= */
+
+.about-page {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.about-hero {
+	background: linear-gradient(135deg, var(--dc-plum-dark), var(--dc-plum-mid));
+	color: #fff;
+	border-radius: var(--dc-radius-lg);
+	padding: 2.5rem;
+	margin-bottom: 1.5rem;
+	box-shadow: var(--dc-shadow);
+}
+
+.about-hero h1 {
+	font-family: "Arial Rounded MT Bold", "Avenir Next", Avenir, sans-serif;
+	font-size: 2.2rem;
+	font-weight: 900;
+	margin-bottom: 0.8rem;
+}
+
+.about-hero p {
+	max-width: 700px;
+	font-size: 1rem;
+	line-height: 1.7;
+	color: rgba(255, 255, 255, 0.88);
+}
+
+.about-card {
+	background: var(--dc-paper);
+	border: 1px solid var(--dc-border);
+	border-radius: var(--dc-radius-lg);
+	padding: 1.8rem;
+	margin-bottom: 1.4rem;
+	box-shadow: 0 5px 14px rgba(67, 20, 70, 0.04);
+}
+
+.about-card h2 {
+	color: var(--dc-plum-dark);
+	font-family: "Arial Rounded MT Bold", "Avenir Next", Avenir, sans-serif;
+	font-size: 1.5rem;
+	font-weight: 900;
+	margin-bottom: 0.8rem;
+}
+
+.about-card p {
+	color: var(--dc-muted);
+	line-height: 1.7;
+}
+
+.about-team-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1rem;
+}
+
+.about-team-member {
+	background: var(--dc-peach);
+	border-radius: var(--dc-radius-md);
+	padding: 1.2rem;
+}
+
+.about-team-member h3 {
+	color: var(--dc-plum-dark);
+	font-size: 1.1rem;
+	font-weight: 900;
+	margin-bottom: 0.25rem;
+}
+
+.about-team-member p {
+	color: var(--dc-orange);
+	font-weight: 800;
+	margin-bottom: 0.5rem;
+}
+
+.about-team-member span {
+	color: var(--dc-muted);
+	font-size: 0.9rem;
+	line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+	.about-team-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.about-hero {
+		padding: 1.8rem;
+	}
 }
 /* =========================================================
    DIRECT MESSAGES
