@@ -80,8 +80,20 @@ def subforum():
 def loginform():
 	return render_template("login.html")
 
+@rt.route('/about')
+def about():
+	return render_template("about.html")
+
+@rt.route('/contact')
+def contact():
+    return render_template("contact.html")
+
+@rt.route('/house-rules')
+def house_rules():
+	return render_template("house_rules.html")
 
 
+# THE CODE BELOW WAS MOVED TO VARIOUS .py
 # Moved to forum/posts.py.
 # @login_required
 # @rt.route('/addpost')
