@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="conversation-page">
+	<div class="conversation-header">
+		<a href="/messages" class="conversation-back">← All Conversations</a>
+
+		<div class="conversation-header-user">
+			<div class="conversation-avatar">{{ other.username[0]|upper }}</div>
+			<h1 {% if other.admin %}class="text-danger"{% endif %}>{{ other.username }}</h1>
+		</div>
+	</div>
+
+	<div class="conversation-thread">
+		{% if thread_messages %}
+			{% for message in thread_messages %}
+			<div class="message-bubble-row {% if message.sender_id == current_user.id %}message-outgoing{% else %}message-incoming{% endif %}">
+				<div class="message-bubble">
+					<div class="message-bubble-content">{{ message.content }}</div>
+					<div class="message-bubble-time">{{ message.get_time_string() }}</div>
+				</div>
+			</div>
+			{% endfor %}
+		{% else %}
+		<div class="empty-discussion-state">
+			<h3>No messages yet.</h3>
+			<p>Send {{ other.username }} a message to start the conversation.</p>
+		</div>
+		{% endif %}
+	</div>
+
+	<form action="/action_send_message" method="POST" class="message-compose-form">
+		<input type="hidden" name="recipient" value="{{ other.username }}">
+		<textarea
+			name="content"
+			class="form-control message-compose-textarea"
+			rows="3"
+			placeholder="Write a message to {{ other.username }}..."
+		></textarea>
+		<input type="submit" value="Send" class="btn dishcourse-primary-btn">
+	</form>
+</div>
+{% endblock %}
