@@ -91,6 +91,7 @@ def action_post():
     content = request.form['content']
     is_public = request.form.get('is_public')  # added, MCC
     is_public = (is_public == 'on')  # added, MCC
+    media_url = request.form.get('media_url') # added, MCC
     # check for valid posting
     errors = []
     retry = False
@@ -102,7 +103,7 @@ def action_post():
         retry = True
     if retry:
         return render_template("createpost.html", subforum=subforum, errors=errors)
-    post = Post(title, content, datetime.datetime.now(), is_public)  # added, MCC
+    post = Post(title, content, datetime.datetime.now(), is_public, media_url)  # updated, MCC
     subforum.posts.append(post)
     user.posts.append(post)
     db.session.commit()
