@@ -26,6 +26,18 @@
 
 		<div class="post-detail-content">{{ post.content }}</div>
 
+{% if post.media_url %}
+<div class="post-media">
+    {% if post.media_url.endswith('.mp4') or post.media_url.endswith('.webm') or post.media_url.endswith('.mov') %}
+        <video controls class="post-media-video">
+            <source src="{{ post.media_url }}">
+        </video>
+    {% else %}
+        <img src="{{ post.media_url }}" alt="Post image" class="post-media-image">
+    {% endif %}
+</div>
+{% endif %}
+
 		<div class="post-detail-tags">
 			<span class="feed-tag">Discussion</span>
 			<span class="feed-tag feed-tag-orange">Food Talk</span>
