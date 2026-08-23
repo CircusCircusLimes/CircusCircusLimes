@@ -42,6 +42,22 @@
                 </label>
             </div>
 
+            <div class="create-post-public">
+                <label class="public-toggle" for="content_format">
+                    <input
+                        type="checkbox" 
+                        name="content_format" 
+                        id="content_format" 
+                        value="markdown"
+                    >
+                    <span class="public-toggle-slider"></span>
+                    <span class="public-toggle-text">
+                        <strong>Use Markdown formatting</strong>
+                        <small>**bold** → <strong>bold</strong> · _italic_ → <em>italic</em> · <code>- item</code> → bullet · # Heading → heading</small>
+                    </span>
+                </label>
+            </div>
+
             <div class="create-post-field">
                 <label for="post-content">What would you like to share?</label>
                 <textarea
@@ -56,6 +72,17 @@
             <div class="create-post-helper">
                 <span>💡</span>
                 <p>Tip: Give people enough detail to jump into the conversation.</p>
+            </div>
+            
+            <div class="create-post-field">
+                <label for="media_url">Image or video link (optional)</label>
+                <input 
+                    id="media_url"
+                    type="text"
+                    name="media_url"
+                    class="form-control"
+                    placeholder="Got receipts? Paste your pic or clip here"
+                >
             </div>
 
             <div class="create-post-actions">

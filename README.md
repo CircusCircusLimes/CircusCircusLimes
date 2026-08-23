@@ -1,55 +1,283 @@
-# CircusCircus
-This is a minimal forum written in python with Flask. It supports only the bare minumum of features to allow discussions, including user accounts, threads, and comments.
+# DishCourse
 
-On first run, the default subforums will be created. Although custom subforums are not supported through any user interface, it is possible to modify forum/setup.py to create custom subforums.
+DishCourse is a social discussion forum built for food lovers — from everyday cooks and foodies to social media chefs and anyone who simply enjoys talking about food.
 
-## Create a Github Organization
+Users can create posts, share recipes and ideas, participate in conversations through comments and reactions, share media, and communicate directly with other members of the community.
 
-- create an org
-- make all group members collaborators
-- clone/branch from group's org's repo.
-- maintain two branches,`main` & `dev` (plus a different branch for each group member)
+DishCourse was developed by the **CircusCircusLimes** team as part of the **Zip Code Wilmington Data Engineering Program**.
 
-## Features to Add
+---
 
-- divide `forum.py` into multiple modules (eg. `posts`, `comments`, `auth (login etc)`)
-- migrate from sqlite3 to MySQL
-- comments on each post (many comments to one post)
-- like/dislike/heart/etc emojis on posts
-- direct messages from one user to another
-- insert pix links and/or video links
-- a nice style based on Bootstrap
-  - a logo on every page
-  - copyright, about etc on footer of each page
-- user settings
-- public/private posts
-  - public posts can be seen by people not logged in
-  - private posts can only be seen by users logged in
-- posts can be plain text or markdown
+## Features
 
-## Changes in 2020
+### Posts
+- Create and view discussion posts
+- Create public or private posts
+- Use plain text or Markdown formatting
+- Add image and video links to posts
+- Browse posts within discussion subforums
 
-I had to make a bunch of changes in this code to get it running. Took far longer than it should.
-But now, if I have it right, you need to clone this and then
+### Comments & Reactions
+- Comment on discussion posts
+- React to posts with Like, Dislike, or Heart
+- React to comments with Like, Dislike, or Heart
+- View reaction counts
+- Change or remove an existing reaction
 
-This currently puts a sqlite3 db in the /tmp directory.
-(use atleast python 3.11)
+### Communication
+- Send direct messages to other users
+- Access conversations with other community members
 
+### User Features
+- User registration and authentication
+- User profiles
+- User settings
+- Avatar support
+
+### User Interface
+- DishCourse custom branding
+- Bootstrap-based interface
+- Responsive page layouts
+- Navigation for forums, posts, messages, profiles, and settings
+
+---
+
+## Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| Python | Application programming language |
+| Flask | Web application framework |
+| Flask-SQLAlchemy | ORM and database integration |
+| Flask-Login | User authentication |
+| MySQL 8.4 | Relational database |
+| PyMySQL | Python MySQL database driver |
+| Jinja2 | HTML templating |
+| HTML / CSS | Application structure and styling |
+| Bootstrap | Responsive UI components |
+| JavaScript | Client-side interaction |
+| Docker | Application containerization |
+| Docker Compose | Multi-container orchestration |
+| Gunicorn | Application server |
+| Git / GitHub | Version control and team collaboration |
+
+---
+
+## Application Architecture
+
+The original Flask forum application was refactored into a modular architecture using **Flask Blueprints**.
+
+Major areas of functionality are separated into modules, including:
+
+- Posts
+- Comments
+- Post Reactions
+- Comment Reactions
+- Direct Messages
+- User Settings
+- User Profiles
+
+SQLAlchemy provides the application's ORM layer and connects the Flask application to the MySQL database.
+
+Docker Compose provides a shared development environment consisting of two primary services:
+
+**Web Application**
+- Flask application
+- Gunicorn application server
+
+**Database**
+- MySQL 8.4
+
+This architecture allows each team member to run the same application environment locally.
+
+---
+
+## Database
+
+DishCourse uses **MySQL 8.4** for persistent application storage.
+
+The database includes data for:
+
+- Users
+- Subforums
+- Posts
+- Comments
+- Post reactions
+- Comment reactions
+- Direct messages
+
+Relationships between users, posts, comments, reactions, and messages are managed through SQLAlchemy models.
+
+---
+
+## Getting Started
+
+### Requirements
+
+Before running DishCourse, install:
+
+- Git
+- Docker Desktop
+
+---
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/CircusCircusLimes/CircusCircusLimes.git
+cd CircusCircusLimes
 ```
-$ python3.11 -m venv venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
-$ ./run.sh
+
+---
+
+### 2. Configure Environment Variables
+
+Create a `.env` file in the project root containing the environment variables required by the Docker configuration.
+
+The `.env` file contains local database credentials and configuration information and should **not** be committed to GitHub.
+
+---
+
+### 3. Build and Start DishCourse
+
+From the project root:
+
+```bash
+docker compose up -d --build
 ```
 
-and it should appear on port 5000
+Docker Compose will start both the DishCourse web application and the MySQL database.
 
-`http://0.0.0.0:5000`
+---
 
-## Changes in 2023
+### 4. Verify the Containers
 
-database is now in `instance/` directory
-removed version labels from `requirements.txt`
+```bash
+docker compose ps
+```
 
-The Heroku file is broken.
-The Procfile is broken too.
+The web and database containers should both show as running, with the MySQL container reporting a healthy status.
+
+---
+
+### 5. Open DishCourse
+
+Open a browser and navigate to:
+
+```text
+http://localhost:5101
+```
+
+---
+
+### Stop DishCourse
+
+```bash
+docker compose down
+```
+
+---
+
+### Restart the Application
+
+```bash
+docker compose restart
+```
+
+---
+
+## Development Workflow
+
+The CircusCircusLimes team used a feature-branch development workflow:
+
+```text
+Feature Branches
+       ↓
+      dev
+       ↓
+     main
+```
+
+Features were developed on individual branches and submitted through GitHub pull requests.
+
+Completed features were merged into `dev`, where the integrated application was tested before being promoted to `main`.
+
+GitHub was used for:
+
+- Source control
+- Feature branches
+- Pull requests
+- Code integration
+- Team collaboration
+- Version management
+
+---
+
+## Testing
+
+The completed application underwent team regression testing after all features were integrated into the `dev` branch.
+
+Testing included:
+
+- User registration and authentication
+- Post creation
+- Public and private posts
+- Plain-text posts
+- Markdown-formatted posts
+- Image and video links
+- Comments
+- Post reactions
+- Comment reactions
+- Direct messaging
+- User profiles
+- User settings
+- Docker application startup
+- MySQL database connectivity
+- Integrated application functionality
+
+The final integrated build was successfully tested by the team before promotion to `main`.
+
+---
+
+## Project Evolution
+
+DishCourse began as an existing Flask forum application.
+
+The CircusCircusLimes team expanded and modernized the application by:
+
+- Refactoring the application into Flask Blueprints
+- Migrating database functionality to MySQL
+- Containerizing the application with Docker
+- Adding public and private posts
+- Adding Markdown and media support
+- Adding comments
+- Adding post reactions
+- Adding comment reactions
+- Adding direct messaging
+- Expanding user settings and profile functionality
+- Creating the DishCourse brand and user interface
+- Improving the application's overall structure and user experience
+
+The project provided hands-on experience working with an existing codebase while implementing new features in a collaborative development environment.
+
+---
+
+## Team
+
+**CircusCircusLimes**
+
+- Leigh Durham
+- Monah
+- Sloane
+
+Developed as part of the **Zip Code Wilmington Data Engineering Program**.
+
+---
+
+## Project Status
+
+**Final Demo Build — Complete**
+
+All planned features have been integrated and regression tested.
+
+DishCourse is ready for final release and demonstration.

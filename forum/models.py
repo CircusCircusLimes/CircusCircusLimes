@@ -31,10 +31,15 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
     admin = db.Column(db.Boolean, default=False)
+    # Filename only (not a path) of the user's uploaded avatar image, stored
+    # under forum/static/images/avatars/. NULL means "no photo uploaded" --
+    # the UI falls back to the colored-initial avatar in that case.
+    avatar_filename = db.Column(db.String(255), nullable=True)
 
     posts = db.relationship("Post", backref="user")
     comments = db.relationship("Comment", backref="user")
     reactions = db.relationship("Reaction", backref="user")
+    comment_reactions = db.relationship("CommentReaction", backref="user")      #added 8/21 LJD
 
     def __init__(self, email, username, password):
         self.email = email
@@ -43,6 +48,9 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
     
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -54,15 +62,20 @@ class Post(db.Model):
     subforum_id = db.Column(db.Integer, db.ForeignKey('subforum.id'))
     postdate = db.Column(db.DateTime)
     is_public = db.Column(db.Boolean,default=True) #added MCC
+    media_url = db.Column(db.Text, default=None) #added MCC
+    content_format = db.Column(db.Enum('plain', 'markdown'), default='plain') #added MCC
 
     #cache stuff
     lastcheck = None
     savedresponce = None
-    def __init__(self, title, content, postdate, is_public):
+    def __init__(self, title, content, postdate, is_public, media_url=None, content_format='plain'):
         self.title = title
         self.content = content
         self.postdate = postdate
         self.is_public = is_public #added MCC
+        self.media_url = media_url #added MCC
+        self.content_format = content_format #added MCC
+        
     def get_time_string(self):
         #this only needs to be calculated every so often, not for every request
         #this can be a rudamentary chache
@@ -110,6 +123,12 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"))
 
+    reactions = db.relationship(
+        "CommentReaction",
+        backref="comment",
+        cascade="all, delete-orphan"
+    )
+
     lastcheck = None
     savedresponce = None
     def __init__(self, content, postdate):
@@ -151,7 +170,76 @@ class Reaction(db.Model):
 
     def __init__(self, reaction_type):
         self.reaction_type = reaction_type
-        
+
+class CommentReaction(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    reaction_type = db.Column(db.String(10), nullable=False)
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )
+
+    comment_id = db.Column(
+        db.Integer,
+        db.ForeignKey("comment.id"),
+        nullable=False
+    )
+
+    __table_args__ = (
+        db.UniqueConstraint(
+            "user_id",
+            "comment_id",
+            name="unique_user_comment_reaction"
+        ),
+    )
+
+    def __init__(self, reaction_type):
+        self.reaction_type = reaction_type
+
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    sentdate = db.Column(db.DateTime)
+    is_read = db.Column(db.Boolean, default=False)
+
+    sender_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    recipient_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    sender = db.relationship("User", foreign_keys=[sender_id], backref="sent_messages")
+    recipient = db.relationship("User", foreign_keys=[recipient_id], backref="received_messages")
+
+    lastcheck = None
+    savedresponce = None
+    def __init__(self, content, sentdate):
+        self.content = content
+        self.sentdate = sentdate
+    def get_time_string(self):
+        #this only needs to be calculated every so often, not for every request
+        #this can be a rudamentary chache
+        now = datetime.datetime.now()
+        if self.lastcheck is None or (now - self.lastcheck).total_seconds() > 30:
+            self.lastcheck = now
+        else:
+            return self.savedresponce
+
+        diff = now - self.sentdate
+        seconds = diff.total_seconds()
+        if seconds / (60 * 60 * 24 * 30) > 1:
+            self.savedresponce =  " " + str(int(seconds / (60 * 60 * 24 * 30))) + " months ago"
+        elif seconds / (60 * 60 * 24) > 1:
+            self.savedresponce =  " " + str(int(seconds / (60*  60 * 24))) + " days ago"
+        elif seconds / (60 * 60) > 1:
+            self.savedresponce = " " + str(int(seconds / (60 * 60))) + " hours ago"
+        elif seconds / (60) > 1:
+            self.savedresponce = " " + str(int(seconds / 60)) + " minutes ago"
+        else:
+            self.savedresponce =  "Just a moment ago!"
+        return self.savedresponce
+
 def error(errormessage):
 	return "<b style=\"color: red;\">" + errormessage + "</b>"
 
@@ -179,4 +267,8 @@ def valid_content(content):
 # Comment checks
 def valid_comment(content):
     return len(content.strip()) > 0 and len(content) <= 1000
+
+# Direct message checks
+def valid_message(content):
+    return len(content.strip()) > 0 and len(content) <= 2000
 

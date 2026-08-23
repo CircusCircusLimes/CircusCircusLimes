@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="messages-page">
+	<div class="messages-heading">
+		<p class="section-eyebrow">Direct Messages</p>
+		<h1>Your Conversations</h1>
+	</div>
+
+	{% if conversations %}
+	<div class="conversation-list">
+		{% for conv in conversations %}
+		<a href="/messages/{{ conv.user.username }}" class="conversation-item{% if conv.unread_count > 0 %} conversation-unread{% endif %}">
+			<div class="conversation-avatar">{{ conv.user.username[0]|upper }}</div>
+
+			<div class="conversation-info">
+				<div class="conversation-top-row">
+					<strong {% if conv.user.admin %}class="text-danger"{% endif %}>{{ conv.user.username }}</strong>
+					<span class="conversation-time">{{ conv.last_message.get_time_string() }}</span>
+				</div>
+				<div class="conversation-preview">
+					{% if conv.last_message.sender_id == current_user.id %}<span class="conversation-preview-you">You:</span> {% endif %}{{ conv.last_message.content[:80] }}{% if conv.last_message.content|length > 80 %}…{% endif %}
+				</div>
+			</div>
+
+			{% if conv.unread_count > 0 %}
+			<span class="conversation-badge">{{ conv.unread_count }}</span>
+			{% endif %}
+		</a>
+		{% endfor %}
+	</div>
+	{% else %}
+	<div class="empty-discussion-state">
+		<h3>No messages yet.</h3>
+		<p>Visit a post and message its author to start a conversation.</p>
+	</div>
+	{% endif %}
+</div>
+{% endblock %}

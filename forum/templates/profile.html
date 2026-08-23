@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="auth-page">
+	<div class="auth-header text-center">
+		<p class="section-eyebrow">Account</p>
+		<h1>Your Profile</h1>
+		<p>This is what your DishCourse account looks like.</p>
+	</div>
+
+	<div class="row g-4 justify-content-center">
+		<div class="col-12 col-lg-7">
+			<section class="auth-card profile-card">
+
+				<div class="profile-avatar-row">
+					<div class="profile-avatar-large">
+						{% if current_user.avatar_filename %}
+							<img
+								src="{{ url_for('static', filename='images/avatars/' ~ current_user.avatar_filename) }}"
+								alt="{{ current_user.username }}'s profile picture"
+							>
+						{% else %}
+							<span>{{ current_user.username[0]|upper }}</span>
+						{% endif %}
+					</div>
+
+					<details class="profile-change">
+						<summary>Change profile picture</summary>
+						<form action="/action_update_avatar" method="POST" enctype="multipart/form-data" class="profile-change-form">
+							<input type="file" name="avatar" accept=".png,.jpg,.jpeg,.gif,.webp" required>
+							<p class="profile-change-hint">PNG, JPG, GIF, or WEBP. 2MB max.</p>
+							<input type="submit" value="Upload" class="btn dishcourse-primary-btn">
+						</form>
+					</details>
+				</div>
+
+				<div class="profile-field-row">
+					<div class="profile-field-main">
+						<div class="profile-field-label">Username</div>
+						<div class="profile-field-value">{{ current_user.username }}</div>
+					</div>
+
+					<details class="profile-change">
+						<summary>Change username</summary>
+						<form action="/action_update_username" method="POST" class="profile-change-form">
+							<input
+								type="text" name="username" class="form-control"
+								value="{{ current_user.username }}" placeholder="Choose a username"
+							>
+							<input type="submit" value="Save" class="btn dishcourse-primary-btn">
+						</form>
+					</details>
+				</div>
+
+				<div class="profile-field-row">
+					<div class="profile-field-main">
+						<div class="profile-field-label">Email</div>
+						<div class="profile-field-value">{{ current_user.email }}</div>
+					</div>
+
+					<details class="profile-change">
+						<summary>Change email</summary>
+						<form action="/action_update_email" method="POST" class="profile-change-form">
+							<input
+								type="email" name="email" class="form-control"
+								value="{{ current_user.email }}" placeholder="Enter your email"
+							>
+							<input type="submit" value="Save" class="btn dishcourse-primary-btn">
+						</form>
+					</details>
+				</div>
+
+				{% if current_user.admin %}
+				<div class="profile-field-row">
+					<div class="profile-field-main">
+						<div class="profile-field-label">Role</div>
+						<div class="profile-field-value">Admin</div>
+					</div>
+				</div>
+				{% endif %}
+
+			</section>
+
+			<div class="profile-settings-link">
+				<a href="/settings" class="dc-settings-btn">
+					<span>⚙</span> Settings
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

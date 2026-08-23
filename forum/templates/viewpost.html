@@ -15,12 +15,37 @@
 						<span>Posted by <strong {% if post.user.admin %}class="text-danger"{% endif %}>{{ post.user.username }}</strong></span>
 						<span class="discussion-meta-divider">•</span>
 						<span>{{ post.get_time_string() }}</span>
+						{% if current_user.is_authenticated and current_user.id != post.user_id %}
+						<span class="discussion-meta-divider">•</span>
+						<a href="/messages/{{ post.user.username }}" class="message-user-link">✉ Message</a>
+						{% endif %}
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="post-detail-content">{{ post.content }}</div>
+		<!-- <div class="post-detail-content">{{ post.content }}</div>; updated MCC; runs through new variable that checks if markdown then bleach-->
+
+		{% if post.content_format == 'markdown' %}
+			<div class="post-detail-content">{{ rendered_content|safe }}</div>
+		{% else %}
+			<div class="post-detail-content">{{ rendered_content }}</div>
+		{% endif %}
+
+
+{% if post.media_url %}
+<div class="post-media">
+    {% if youtube_id %}
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ youtube_id }}" frameborder="0" allowfullscreen></iframe>
+    {% elif post.media_url.endswith('.mp4') or post.media_url.endswith('.webm') or post.media_url.endswith('.mov') %}
+        <video controls class="post-media-video">
+            <source src="{{ post.media_url }}">
+        </video>
+    {% else %}
+        <img src="{{ post.media_url }}" alt="Post image" class="post-media-image">
+    {% endif %}
+</div>
+{% endif %}
 
 		<div class="post-detail-tags">
 			<span class="feed-tag">Discussion</span>
@@ -100,10 +125,60 @@
 					<div class="comment-card-header">
 						<div class="comment-author">
 							<span {% if comment.user.admin %}class="text-danger"{% endif %}>{{ comment.user.username }}</span>
+							{% if current_user.is_authenticated and current_user.id != comment.user_id %}
+							<a href="/messages/{{ comment.user.username }}" class="message-user-link">✉ Message</a>
+							{% endif %}
 						</div>
 						<div class="comment-date">{{ comment.get_time_string() }}</div>
 					</div>
 					<div class="comment-card-content">{{ comment.content }}</div>
+					<div class="comment-reactions">
+						{% set like_count = comment.reactions
+							| selectattr("reaction_type", "equalto", "like")
+							| list
+							| length %}
+						{% set dislike_count = comment.reactions
+							| selectattr("reaction_type", "equalto", "dislike")
+							| list
+							| length %}
+						{% set heart_count = comment.reactions
+							| selectattr("reaction_type", "equalto", "heart")
+							| list
+							| length %}
+						{% if current_user.is_authenticated %}
+							{% set ns = namespace(user_reaction=none) %}
+							{% for reaction in comment.reactions %}
+								{% if reaction.user_id == current_user.id %}
+									{% set ns.user_reaction = reaction.reaction_type %}
+								{% endif %}
+							{% endfor %}
+							<form action="/action_comment_reaction"
+								method="POST"
+								class="comment-reaction-form">
+								<input type="hidden"
+									name="comment_id"
+									value="{{ comment.id }}">
+								<button type="submit"
+										name="reaction_type"
+										value="like"
+										class="reaction-button {% if ns.user_reaction == 'like' %}reaction-selected{% endif %}">
+									👍 {{ like_count }}
+								</button>
+								<button type="submit"
+										name="reaction_type"
+										value="dislike"
+										class="reaction-button {% if ns.user_reaction == 'dislike' %}reaction-selected{% endif %}">
+									👎 {{ dislike_count }}
+								</button>
+								<button type="submit"
+										name="reaction_type"
+										value="heart"
+										class="reaction-button {% if ns.user_reaction == 'heart' %}reaction-selected{% endif %}">
+									❤️ {{ heart_count }}
+								</button>
+							</form>
+						{% endif %}
+					</div>
 				</div>
 			</article>
 			{% endfor %}
