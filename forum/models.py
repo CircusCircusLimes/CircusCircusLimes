@@ -39,6 +39,7 @@ class User(UserMixin, db.Model):
     posts = db.relationship("Post", backref="user")
     comments = db.relationship("Comment", backref="user")
     reactions = db.relationship("Reaction", backref="user")
+    comment_reactions = db.relationship("CommentReaction", backref="user")      #added 8/21 LJD
 
     def __init__(self, email, username, password):
         self.email = email
@@ -122,6 +123,12 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     post_id = db.Column(db.Integer, db.ForeignKey("post.id"))
 
+    reactions = db.relationship(
+        "CommentReaction",
+        backref="comment",
+        cascade="all, delete-orphan"
+    )
+
     lastcheck = None
     savedresponce = None
     def __init__(self, content, postdate):
@@ -159,6 +166,35 @@ class Reaction(db.Model):
     # this prevents one user from having multiple reactions to the same comment/post
     __table_args__ = (
         db.UniqueConstraint("user_id", "post_id", name="unique_user_post_reaction"), 
+    )
+
+    def __init__(self, reaction_type):
+        self.reaction_type = reaction_type
+
+class CommentReaction(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    reaction_type = db.Column(db.String(10), nullable=False)
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )
+
+    comment_id = db.Column(
+        db.Integer,
+        db.ForeignKey("comment.id"),
+        nullable=False
+    )
+
+    __table_args__ = (
+        db.UniqueConstraint(
+            "user_id",
+            "comment_id",
+            name="unique_user_comment_reaction"
+        ),
     )
 
     def __init__(self, reaction_type):

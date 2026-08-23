@@ -145,7 +145,3 @@ forum/static/old_style.css
 
 .env
 
-# Personal study/reference material (Claude-generated) -- keep out of the
-# shared repo entirely, never add/commit/merge these into dev.
-Documents/*Study_Guide*
-
