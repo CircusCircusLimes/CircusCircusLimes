@@ -10,3 +10,5 @@ Werkzeug
 wheel
 honcho
 PyMySQL==1.2.0
+bleach==6.4.0
+Markdown==3.10.3
