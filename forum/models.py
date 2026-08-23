@@ -63,16 +63,19 @@ class Post(db.Model):
     postdate = db.Column(db.DateTime)
     is_public = db.Column(db.Boolean,default=True) #added MCC
     media_url = db.Column(db.Text, default=None) #added MCC
+    content_format = db.Column(db.Enum('plain', 'markdown'), default='plain') #added MCC
 
     #cache stuff
     lastcheck = None
     savedresponce = None
-    def __init__(self, title, content, postdate, is_public, media_url=None):
+    def __init__(self, title, content, postdate, is_public, media_url=None, content_format='plain'):
         self.title = title
         self.content = content
         self.postdate = postdate
         self.is_public = is_public #added MCC
         self.media_url = media_url #added MCC
+        self.content_format = content_format #added MCC
+        
     def get_time_string(self):
         #this only needs to be calculated every so often, not for every request
         #this can be a rudamentary chache
