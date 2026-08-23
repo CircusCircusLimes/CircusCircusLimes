@@ -2,6 +2,7 @@ from flask import Flask
 from forum.routes import rt
 from forum.comments import comments
 from forum.reactions import reactions
+from forum.comment_reactions import comment_reactions
 from forum.posts import posts
 from forum.messages import messages
 from forum.settings import settings
@@ -18,6 +19,7 @@ def create_app():
     app.register_blueprint(posts)
     app.register_blueprint(comments)
     app.register_blueprint(reactions)
+    app.register_blueprint(comment_reactions)
     app.register_blueprint(messages)
     app.register_blueprint(settings)
     app.register_blueprint(profile)

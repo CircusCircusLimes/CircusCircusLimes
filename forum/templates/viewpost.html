@@ -123,6 +123,53 @@
 						<div class="comment-date">{{ comment.get_time_string() }}</div>
 					</div>
 					<div class="comment-card-content">{{ comment.content }}</div>
+					<div class="comment-reactions">
+						{% set like_count = comment.reactions
+							| selectattr("reaction_type", "equalto", "like")
+							| list
+							| length %}
+						{% set dislike_count = comment.reactions
+							| selectattr("reaction_type", "equalto", "dislike")
+							| list
+							| length %}
+						{% set heart_count = comment.reactions
+							| selectattr("reaction_type", "equalto", "heart")
+							| list
+							| length %}
+						{% if current_user.is_authenticated %}
+							{% set ns = namespace(user_reaction=none) %}
+							{% for reaction in comment.reactions %}
+								{% if reaction.user_id == current_user.id %}
+									{% set ns.user_reaction = reaction.reaction_type %}
+								{% endif %}
+							{% endfor %}
+							<form action="/action_comment_reaction"
+								method="POST"
+								class="comment-reaction-form">
+								<input type="hidden"
+									name="comment_id"
+									value="{{ comment.id }}">
+								<button type="submit"
+										name="reaction_type"
+										value="like"
+										class="reaction-button {% if ns.user_reaction == 'like' %}reaction-selected{% endif %}">
+									👍 {{ like_count }}
+								</button>
+								<button type="submit"
+										name="reaction_type"
+										value="dislike"
+										class="reaction-button {% if ns.user_reaction == 'dislike' %}reaction-selected{% endif %}">
+									👎 {{ dislike_count }}
+								</button>
+								<button type="submit"
+										name="reaction_type"
+										value="heart"
+										class="reaction-button {% if ns.user_reaction == 'heart' %}reaction-selected{% endif %}">
+									❤️ {{ heart_count }}
+								</button>
+							</form>
+						{% endif %}
+					</div>
 				</div>
 			</article>
 			{% endfor %}
