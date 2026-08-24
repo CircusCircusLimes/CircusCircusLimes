@@ -149,3 +149,5 @@ forum/static/old_style.css
 # shared repo entirely, never add/commit/merge these into dev.
 Documents/*Study_Guide*
 
+# macOS
+.DS_Store

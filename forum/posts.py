@@ -5,6 +5,21 @@ from flask_login.utils import login_required
 import datetime
 from forum.models import User, Post, Comment, Subforum, Reaction, valid_content, valid_title, db, generateLinkPath, error
 from forum.user import username_taken, email_taken, valid_username
+import markdown
+import bleach
+from urllib.parse import urlparse, parse_qs
+
+def get_youtube_id(url):
+    parsed = urlparse(url)
+    if 'youtube.com' in parsed.netloc:
+        query_params = parse_qs(parsed.query)
+        video_id = query_params.get('v')
+        if video_id:
+            return video_id[0]
+    elif 'youtu.be' in parsed.netloc:
+        return parsed.path.lstrip('/')
+    return None
+
 
 posts = Blueprint('posts', __name__)
 
@@ -27,7 +42,8 @@ def viewpost():
 
     if not post:
         return error("That post does not exist!")
-
+    
+    ##added MCC
     if not post.is_public and not current_user.is_authenticated:
         flash("This post is private. Log in to view it.", "error")
         return redirect(f"/subforum?sub={post.subforum_id}")
@@ -66,6 +82,18 @@ def viewpost():
         if reaction:
             user_reaction = reaction.reaction_type
 
+    ##added MCC
+    if post.content_format == 'markdown':
+        rendered_content = markdown.markdown(post.content)
+        rendered_content = bleach.clean(rendered_content, tags=['p', 'strong', 'em', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'a', 'br'])
+    else:
+        rendered_content = post.content
+
+    ##added MCC
+    youtube_id = None
+    if post.media_url:
+        youtube_id = get_youtube_id(post.media_url)
+
     return render_template(
         "viewpost.html",
         post=post,
@@ -74,7 +102,9 @@ def viewpost():
         like_count=like_count,
         dislike_count=dislike_count,
         heart_count=heart_count,
-        user_reaction=user_reaction
+        user_reaction=user_reaction,
+        rendered_content=rendered_content,
+        youtube_id=youtube_id
     )
 
 
@@ -91,6 +121,14 @@ def action_post():
     content = request.form['content']
     is_public = request.form.get('is_public')  # added, MCC
     is_public = (is_public == 'on')  # added, MCC
+    media_url = request.form.get('media_url') # added, MCC
+
+    content_format = request.form.get('content_format') # added, MCC
+    if content_format == 'markdown': # added, MCC
+        content_format = 'markdown'# added, MCC
+    else:
+        content_format = 'plain' # added, MCC
+
     # check for valid posting
     errors = []
     retry = False
@@ -102,7 +140,7 @@ def action_post():
         retry = True
     if retry:
         return render_template("createpost.html", subforum=subforum, errors=errors)
-    post = Post(title, content, datetime.datetime.now(), is_public)  # added, MCC
+    post = Post(title, content, datetime.datetime.now(), is_public, media_url, content_format)  # updated, MCC
     subforum.posts.append(post)
     user.posts.append(post)
     db.session.commit()
